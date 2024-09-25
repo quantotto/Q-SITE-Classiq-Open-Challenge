@@ -1,34 +1,55 @@
-qfunc prep_qubits(Vs1: real[][], normalized_x0: real[], approximator: qbit, phi: qbit) {
+qfunc prep_qubits(Vs1: real[][], normalized_x0: real[], approximator: qbit[], phi: qbit) {
   unitary(Vs1, approximator);
   inplace_prepare_amplitudes(normalized_x0, 0.01, phi);
 }
 
-qfunc encode(V: real[], Vs1: real[][], normalized_x0: real[], output ancilla: qbit, output approximator: qbit, phi: qbit) {
-  allocate(1, ancilla);
-  allocate(1, approximator);
+qfunc encode(V: real[], Vs1: real[][], normalized_x0: real[], ancilla: qbit, approximator: qbit[], phi: qbit) {
   unitary(V, ancilla);
   control (ancilla == 0) {
     prep_qubits(Vs1, normalized_x0, approximator, phi);
   }
 }
 
-qfunc approximate(A: real[][], approximator: qbit, phi: qbit) {
-  control (approximator == 0) {
-    apply_to_all(IDENTITY, phi);
-  }
-  control (approximator == 1) {
-    unitary(A, phi);
+qfunc approximate(A: real[][], approximator: qnum, phi: qbit) {
+  repeat (i: 2) {
+    control (approximator == i) {
+      power (i) {
+        unitary(A, phi);
+      }
+    }
   }
 }
 
-qfunc main(output phi: qbit) {
-  ancilla: qbit;
-  approximator: qbit;
+qfunc main(output phi: qbit, output approximator: qnum, output ancilla: qbit) {
   allocate(1, phi);
+  allocate(2, approximator);
+  allocate(1, ancilla);
   within {
     encode([[1, 0], [0, (-1)]], [
-      [0.8474, 0.531],
-      [(-0.531), 0.8474]
+      [
+        0.8682,
+        0.4617,
+        0.1736,
+        0.0533
+      ],
+      [
+        0.4962,
+        (-0.8079),
+        (-0.3038),
+        (-0.0933)
+      ],
+      [
+        (-0.0),
+        0.3661,
+        (-0.8896),
+        (-0.2732)
+      ],
+      [
+        (-0.0),
+        (-0.0),
+        0.2935,
+        (-0.956)
+      ]
     ], [0.7071, 0.7071], ancilla, approximator, phi);
   } apply {
     approximate([[0, 1], [(-1), 0]], approximator, phi);
