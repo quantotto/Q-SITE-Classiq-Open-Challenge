@@ -1,0 +1,113 @@
+qfunc prep_qubits(Vs1: real[][], approximator: qbit[], phi: qbit) {
+  unitary(Vs1, approximator);
+}
+
+qfunc encode(V: real[], Vs1: real[][], ancilla: qbit, approximator: qbit[], phi: qbit) {
+  unitary(V, ancilla);
+  control (ancilla == 0) {
+    prep_qubits(Vs1, approximator, phi);
+  }
+}
+
+qfunc approximate(A: real[][], normalized_y0: real[], approximator: qnum, phi: qbit) {
+  inplace_prepare_amplitudes(normalized_y0, 0.01, phi);
+  repeat (i: 2 ** approximator.size) {
+    control (approximator == i) {
+      power (i) {
+        unitary(A, phi);
+      }
+    }
+  }
+}
+
+qfunc main(output phi: qbit, output approximator: qnum, output ancilla: qbit) {
+  allocate(1, phi);
+  allocate(3, approximator);
+  allocate(1, ancilla);
+  within {
+    encode([[1, 0], [0, (-1)]], [
+      [
+        0.5924,
+        0.8057,
+        (-0.0),
+        (-0.0),
+        (-0.0),
+        (-0.0),
+        (-0.0),
+        (-0.0)
+      ],
+      [
+        0.6062,
+        (-0.4457),
+        0.6587,
+        (-0.0),
+        (-0.0),
+        (-0.0),
+        (-0.0),
+        (-0.0)
+      ],
+      [
+        0.4387,
+        (-0.3225),
+        (-0.622),
+        0.5627,
+        (-0.0),
+        (-0.0),
+        (-0.0),
+        (-0.0)
+      ],
+      [
+        0.2592,
+        (-0.1906),
+        (-0.3675),
+        (-0.7174),
+        0.4968,
+        (-0.0),
+        (-0.0),
+        (-0.0)
+      ],
+      [
+        0.1326,
+        (-0.0975),
+        (-0.188),
+        (-0.3671),
+        (-0.7758),
+        0.4483,
+        (-0.0),
+        (-0.0)
+      ],
+      [
+        0.0607,
+        (-0.0446),
+        (-0.0861),
+        (-0.168),
+        (-0.355),
+        (-0.8158),
+        0.4088,
+        (-0.0)
+      ],
+      [
+        0.0254,
+        (-0.0186),
+        (-0.0359),
+        (-0.0702),
+        (-0.1483),
+        (-0.3408),
+        (-0.8512),
+        0.3607
+      ],
+      [
+        0.0098,
+        (-0.0072),
+        (-0.0139),
+        (-0.0271),
+        (-0.0574),
+        (-0.1318),
+        (-0.3292),
+        (-0.9327)
+      ]
+    ], ancilla, approximator, phi);
+  } apply {
+    approximate([[0, 1], [(-1), 0]], [0.7071, 0.7071], approximator, phi);
+  }
+}
