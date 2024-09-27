@@ -1,0 +1,53 @@
+qfunc prep_qubits(Vs1: real[][], approximator: qbit[]) {
+  unitary(Vs1, approximator);
+}
+
+qfunc encode(Vs1: real[][], approximator: qbit[]) {
+  prep_qubits(Vs1, approximator);
+}
+
+qfunc approximate(A: real[][], normalized_y0: real[], approximator: qnum, phi: qbit) {
+  inplace_prepare_amplitudes(normalized_y0, 0.01, phi);
+  repeat (i: 2 ** approximator.size) {
+    control (approximator == i) {
+      power (i) {
+        unitary(A, phi);
+      }
+    }
+  }
+}
+
+qfunc main(output phi: qbit, output approximator: qnum) {
+  allocate(1, phi);
+  allocate(2, approximator);
+  within {
+    encode([
+      [
+        0.6124,
+        0.7906,
+        (-0.0),
+        (-0.0)
+      ],
+      [
+        0.6124,
+        (-0.4743),
+        0.6325,
+        (-0.0)
+      ],
+      [
+        0.433,
+        (-0.3354),
+        (-0.6708),
+        0.5
+      ],
+      [
+        0.25,
+        (-0.1936),
+        (-0.3873),
+        (-0.866)
+      ]
+    ], approximator);
+  } apply {
+    approximate([[0, 1], [(-1), 0]], [0.7071, 0.7071], approximator, phi);
+  }
+}
