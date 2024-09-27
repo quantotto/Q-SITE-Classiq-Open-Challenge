@@ -9,4 +9,8 @@ Here is the brief description of the submitted files:
 - diff_eq.qmod - quantum model
 - diff_eq.qprog - quantum program
 
+I attest that all the work was done solely by myself. The use of "we" in the presentation is merely a styling choice. If external sources were used, they are attributed in References or Credits in the code.
+
 Thanks for the challenge, team Classiq!
+
+Yevgeny Menaker
