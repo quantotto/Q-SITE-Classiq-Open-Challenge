@@ -12,7 +12,7 @@ Here is the brief description of the submitted files:
 I attest that all the work was done solely by myself. The use of "we" in the presentation is merely a writing style. If external sources were used, they are attributed in References or Credits in the code.
 
 Thanks for the challenge, team Classiq!<br>
-Thanks for oragnizing the event, team Q-Site!
+Thanks for organizing the event, team Q-Site!
 
 Yevgeny Menaker<br>
 team Quantotto
