@@ -1,9 +1,5 @@
-qfunc prep_qubits(Vs1: real[][], approximator: qbit[]) {
-  unitary(Vs1, approximator);
-}
-
 qfunc encode(Vs1: real[][], approximator: qbit[]) {
-  prep_qubits(Vs1, approximator);
+  unitary(Vs1, approximator);
 }
 
 qfunc approximate(A: real[][], normalized_y0: real[], approximator: qnum, phi: qbit) {
